@@ -37,7 +37,7 @@ public class Activity
         
         ShowSpinner(5);
         Console.WriteLine($"You have completed another {_duration} seconds of the {_name} Activity.");
-        ShowSpinner(5);
+        ShowSpinner(4);
     }
 
     public void ShowSpinner(int seconds)
