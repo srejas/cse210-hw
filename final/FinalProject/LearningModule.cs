@@ -67,30 +67,38 @@ public class LearningModule
 
     public void AskQuestions()
     {
-        while (AllShapesUsed() != true)
+        Random randomGenerator = new Random();
+        int startingQuestion = randomGenerator.Next(1, _shapes.Count());
+
+        List<int> questionsToAsk = new List<int>(){1,2,3,4,5,6};
+
+        List<int> questionsAsked = new List<int>();
+        
+        for (int i = startingQuestion; i <= _shapes.Count(); i = randomGenerator.Next(1,_shapes.Count()))
         {
-            Random randomGenerator = new Random();
-            int startingQuestion = randomGenerator.Next(1, _shapes.Count());
-            
-            for (int i = startingQuestion; i <= _shapes.Count(); i++)
+            while (questionsAsked.Contains(i))
             {
-                Console.Clear();
-                DisplayFormulas();
-
-                int correctAnswer = i - 1;
-
-                Type shapeType = _shapes[correctAnswer].GetType();
-                Console.Write($"What number option is the formula for a {shapeType}? ");
-
-                CheckAnswer(correctAnswer, shapeType);
-
-                _shapes[correctAnswer].MarkUsed();
-
-                if (i > _shapes.Count())
-                {
-                    i = 0;
-                }
+                List<int> unusedQuestions = questionsToAsk.Except(questionsAsked).ToList();
+                i = unusedQuestions[0];
             }
+
+            Console.Clear();
+            DisplayFormulas();
+
+            int correctAnswer = i - 1;
+
+            Type shapeType = _shapes[correctAnswer].GetType();
+            Console.Write($"What number option is the formula for a {shapeType}? ");
+
+            CheckAnswer(correctAnswer, shapeType);
+            _shapes[correctAnswer].MarkUsed();
+
+            if (AllShapesUsed() == true)
+            {
+                return;
+            }
+            
+            questionsAsked.Add(i);
         }
     }
 
@@ -145,13 +153,12 @@ public class LearningModule
         {
             Console.WriteLine("You made it!");
             Console.WriteLine();
-            Console.WriteLine("You got to the end but you might wanna brush " +
-            "up on your formulas and try again. Seems like there were a few you " +
-            "didn't know.");
+            Console.WriteLine("You got to the end but it seems like there were a few you " +
+            "didn't know. You might wanna review your formulas and try again.");
         }
         else
         {
-            Console.WriteLine("Congradulations!");
+            Console.WriteLine("Congradulations! You did it!");
             Console.WriteLine();
             Console.WriteLine("You really know your formulas!");
         }
